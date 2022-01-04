@@ -29,6 +29,14 @@
         <h3 class="header">Found Users</h3>
         <div v-if="users">
           <p id="foundUsers"></p>
+          <p>
+            {{ users[0].message }}:
+            <span
+              ><a :href="users[0].documentation_url">{{
+                users[0].documentation_url
+              }}</a></span
+            >
+          </p>
           <table id="results_table" class="table" width="100%">
             <thead>
               <tr>
@@ -43,7 +51,9 @@
             </thead>
             <tbody>
               <!-- <tr> -->
-              <tr v-for="user in users" :key="user.index">
+
+              <tr v-for="user in users" :key="user.id">
+                <!-- <p>{{ users.name }}</p> -->
                 <td><img v-bind:src="user.avatar_url" alt="" /></td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.bio }}</td>
@@ -72,7 +82,6 @@ import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import axios from "axios";
 import $ from "jquery";
-// import { ref } from "vue";
 import { ref } from "@vue/reactivity";
 
 export default {
@@ -84,41 +93,41 @@ export default {
       const gh_api = "https://api.github.com/search/users?q=";
       const userInput = username.value;
       const gh_endpoint = gh_api + userInput;
+      const newUserArray = [];
 
-      await axios.get(gh_endpoint).then((res) => {
-        const axiosRequest = res.data;
+      await axios
+        .get(gh_endpoint)
+        .then((res) => {
+          const axiosRequest = res.data;
 
-        if (typeof axiosRequest === "object") {
-          const newUserArray = [];
-          newUserArray.push(axiosRequest);
-          console.log(newUserArray);
+          return axiosRequest;
+        })
+        .then((response) => {
+          for (var userIdx in response.items) {
+            const userEP = "https://api.github.com/users/";
+            fetch(userEP + response.items[userIdx].login)
+              .then(function (response) {
+                return response.json();
+              })
+              .then((response) => {
+                newUserArray.push(response);
+                console.log("newUserArray: ", newUserArray);
+                users.value = newUserArray;
 
-          for (let individualUser in newUserArray[0].items) {
-            const anotherNewUserArray = [];
-            if (typeof newUserArray[0].items[individualUser] === "object") {
-              anotherNewUserArray.push(newUserArray[0].items[individualUser]);
+                return users;
+              })
+              .then((users) => {
+                console.log("users.value: ", users.value);
+                // response1.forEach((element) => {
+                //   console.log("element: ", element);
+                //   users.value = element;
+                // });
 
-              console.log(anotherNewUserArray);
-            } else {
-              return;
-            }
-            console.log();
-            // return individualUser;
-            users.value = newUserArray[0].items;
+                return users;
+              });
+            $("#results_table").DataTable();
           }
-        } else {
-          console.log("hello from else statement");
-          // for (let individualUser in axiosRequest[0].items) {
-          for (let individualUser in users[0].index) {
-            console.log(individualUser);
-          }
-          users.value = res.data;
-        }
-        console.log("axiosRequest: ", axiosRequest);
-
-        $("#results_table").DataTable();
-        return users;
-      });
+        });
     };
 
     return { handleSubmit, username, users };
