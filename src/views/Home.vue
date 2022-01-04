@@ -17,5 +17,11 @@ export default {
 </script>
 
 <style>
+body,
+html,
+td {
+  background-color: #061328 !important;
+  color: #ffff;
+}
 </style>
 

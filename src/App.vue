@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <form onSubmit="return false;" id="userForm">
+      <form v-on:keyup.enter="handleSubmit" id="userForm">
         <h1 class="h3 mb-3 font-weight-normal">Search 4 A GitHub User</h1>
         <input
           type="text"
@@ -14,7 +14,7 @@
           autofocus
         />
         <br />
-        <p>{{ username }}</p>
+        <p class="foundUsers">{{ username }}</p>
         <button
           class="btn btn-lg btn-primary btn-block"
           type="button"
@@ -28,9 +28,8 @@
       <div class="container mt-4">
         <h3 class="header">Found Users</h3>
         <div v-if="users">
-          <p id="foundUsers"></p>
+          <p class="foundUsers">{{ users[0].message }}</p>
           <p>
-            {{ users[0].message }}:
             <span
               ><a :href="users[0].documentation_url">{{
                 users[0].documentation_url
@@ -50,22 +49,25 @@
               </tr>
             </thead>
             <tbody>
-              <!-- <tr> -->
-
               <tr v-for="user in users" :key="user.id">
                 <!-- <p>{{ users.name }}</p> -->
-                <td><img v-bind:src="user.avatar_url" alt="" /></td>
+                <td>
+                  <img
+                    v-bind:src="user.avatar_url"
+                    alt=""
+                    class="user-avatar"
+                  />
+                </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.bio }}</td>
                 <td>{{ user.followers }}</td>
                 <td>{{ user.following }}</td>
                 <td>{{ user.twitter_username }}</td>
-                <td>{{ user.html_url }}</td>
+                <td><a href="user.html_url"></a>{{ user.html_url }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div v-else><p>No users found</p></div>
       </div>
       <p class="mt-5 mb-3 text-muted">
         Made with <img alt="Vue logo" src="./assets/logo.png" />ue.js by Anthony
@@ -97,40 +99,91 @@ export default {
 
       await axios
         .get(gh_endpoint)
+        // await fetch(gh_endpoint)
         .then((res) => {
-          const axiosRequest = res.data;
+          const fetchRequest = res.data;
 
-          return axiosRequest;
+          return fetchRequest;
         })
-        .then((response) => {
-          for (var userIdx in response.items) {
+        .then((res) => {
+          for (let userIdx in res.items) {
             const userEP = "https://api.github.com/users/";
-            fetch(userEP + response.items[userIdx].login)
-              .then(function (response) {
-                return response.json();
+
+            fetch(userEP + res.items[userIdx].login)
+              .then((res) => {
+                return res.json();
               })
-              .then((response) => {
-                newUserArray.push(response);
+              .then((res) => {
+                newUserArray.push(res);
                 console.log("newUserArray: ", newUserArray);
                 users.value = newUserArray;
 
                 return users;
-              })
-              .then((users) => {
-                console.log("users.value: ", users.value);
-                // response1.forEach((element) => {
-                //   console.log("element: ", element);
-                //   users.value = element;
-                // });
-
-                return users;
               });
+
             $("#results_table").DataTable();
           }
         });
     };
 
     return { handleSubmit, username, users };
+  },
+  beforeMount() {
+    console.log("before mount");
+  },
+  mounted() {
+    console.log("mounted!");
+  },
+  beforeUpdate() {
+    console.log("before update");
+  },
+  updated() {
+    const username = ref("");
+    const users = ref(null);
+
+    console.log("updated!");
+    async () => {
+      const gh_api = "https://api.github.com/search/users?q=";
+      const userInput = username.value;
+      const gh_endpoint = gh_api + userInput;
+      const newUserArray = [];
+
+      await axios
+        .get(gh_endpoint)
+        // await fetch(gh_endpoint)
+        .then((res) => {
+          const fetchRequest = res.data;
+
+          return fetchRequest;
+        })
+        .then(async (res) => {
+          for (let userIdx in res.items) {
+            const userEP = "https://api.github.com/users/";
+
+            await fetch(userEP + res.items[userIdx].login)
+              .then(async (res) => {
+                const fetchRequest = await res.json();
+                return fetchRequest;
+              })
+              .then(async (res) => {
+                await res;
+                newUserArray.push(res);
+                console.log("newUserArray: ", newUserArray);
+                users.value = newUserArray;
+
+                return users;
+              });
+
+            $("#results_table").DataTable();
+          }
+        });
+    };
+  },
+  activated() {
+    console.log("activated");
+  },
+  beforeUnmount() {
+    console.log("before unmounted");
   },
 };
 </script>
@@ -151,7 +204,6 @@ td {
   background-color: #061328 !important;
   color: #ffff;
 }
-
 tr {
   color: turquoise;
 }
@@ -168,5 +220,22 @@ h3 {
 #results_table {
   height: auto;
 }
+h1,
+h3 {
+  color: white;
+}
+.user-avatar {
+  width: 100px;
+  height: 100px;
+}
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+#results_table_filter {
+  background-color: white;
+}
+.foundUsers {
+  color: purple;
+}
 </style>
-
