@@ -14,7 +14,7 @@
           autofocus
         />
         <br />
-        <p class="foundUsers">{{ username }}</p>
+        <!---->
         <button
           class="btn btn-lg btn-primary btn-block"
           type="button"
@@ -28,14 +28,6 @@
       <div class="container mt-4">
         <h3 class="header">Found Users</h3>
         <div v-if="users">
-          <p class="foundUsers">{{ users[0].message }}</p>
-          <p>
-            <span
-              ><a :href="users[0].documentation_url">{{
-                users[0].documentation_url
-              }}</a></span
-            >
-          </p>
           <table id="results_table" class="table" width="100%">
             <thead>
               <tr>
@@ -50,7 +42,6 @@
             </thead>
             <tbody>
               <tr v-for="user in users" :key="user.id">
-                <!-- <p>{{ users.name }}</p> -->
                 <td>
                   <img
                     v-bind:src="user.avatar_url"
@@ -62,8 +53,12 @@
                 <td>{{ user.bio }}</td>
                 <td>{{ user.followers }}</td>
                 <td>{{ user.following }}</td>
-                <td>{{ user.twitter_username }}</td>
-                <td><a href="user.html_url"></a>{{ user.html_url }}</td>
+                <td>
+                  <a v-bind:href="user.twitter_username">{{
+                    user.twitter_username
+                  }}</a>
+                </td>
+                <td><a :href="user.html_url"></a>{{ user.html_url }}</td>
               </tr>
             </tbody>
           </table>
@@ -87,6 +82,11 @@ import $ from "jquery";
 import { ref } from "@vue/reactivity";
 
 export default {
+  methods: {
+    forceUpdate() {
+      this.$forceUpdate();
+    },
+  },
   setup() {
     const username = ref("");
     const users = ref(null);
@@ -97,58 +97,7 @@ export default {
       const gh_endpoint = gh_api + userInput;
       const newUserArray = [];
 
-      await axios
-        .get(gh_endpoint)
-        // await fetch(gh_endpoint)
-        .then((res) => {
-          const fetchRequest = res.data;
-
-          return fetchRequest;
-        })
-        .then((res) => {
-          for (let userIdx in res.items) {
-            const userEP = "https://api.github.com/users/";
-
-            fetch(userEP + res.items[userIdx].login)
-              .then((res) => {
-                return res.json();
-              })
-              .then((res) => {
-                newUserArray.push(res);
-                console.log("newUserArray: ", newUserArray);
-                users.value = newUserArray;
-
-                return users;
-              });
-
-            $("#results_table").DataTable();
-          }
-        });
-    };
-
-    return { handleSubmit, username, users };
-  },
-  beforeMount() {
-    console.log("before mount");
-  },
-  mounted() {
-    console.log("mounted!");
-  },
-  beforeUpdate() {
-    console.log("before update");
-  },
-  updated() {
-    const username = ref("");
-    const users = ref(null);
-
-    console.log("updated!");
-    async () => {
-      const gh_api = "https://api.github.com/search/users?q=";
-      const userInput = username.value;
-      const gh_endpoint = gh_api + userInput;
-      const newUserArray = [];
-
-      await axios
+      const axiosRequest = await axios
         .get(gh_endpoint)
         // await fetch(gh_endpoint)
         .then((res) => {
@@ -160,24 +109,40 @@ export default {
           for (let userIdx in res.items) {
             const userEP = "https://api.github.com/users/";
 
-            await fetch(userEP + res.items[userIdx].login)
-              .then(async (res) => {
-                const fetchRequest = await res.json();
-                return fetchRequest;
+            const fetchRequest = await fetch(userEP + res.items[userIdx].login)
+              .then((res) => {
+                return res.json();
               })
-              .then(async (res) => {
-                await res;
-                newUserArray.push(res);
+              .then((res) => {
+                // newUserArray.push(res);
                 console.log("newUserArray: ", newUserArray);
-                users.value = newUserArray;
 
-                return users;
+                return res;
               });
 
-            $("#results_table").DataTable();
+            newUserArray.push(fetchRequest);
           }
+          console.log(users.value);
+          console.log(axiosRequest);
         });
+      users.value = newUserArray;
+      $("#results_table").DataTable();
     };
+
+    return { handleSubmit, username, users };
+    // return { handleSubmit, users };
+  },
+  beforeMount() {
+    console.log("before mount");
+  },
+  mounted() {
+    console.log("mounted!");
+  },
+  beforeUpdate() {
+    console.log("before update");
+  },
+  updated() {
+    console.log("updated!");
   },
   activated() {
     console.log("activated");
