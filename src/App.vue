@@ -14,7 +14,22 @@
           autofocus
         />
         <br />
-        <!---->
+        <p class="">Toggle the checkbox to show/hide the Avatars</p>
+        <input
+          type="radio"
+          id="radio"
+          v-model="checked"
+          @click="handleToggle"
+        />
+        <label for="radio"> click to enable check box</label>
+        <hr />
+        <input
+          type="checkbox"
+          id="checkbox"
+          :disabled="!checked"
+          @click="handleShowAvatar"
+        />
+        <label for="checkbox"> {{ checked }}</label>
         <button
           class="btn btn-lg btn-primary btn-block"
           type="button"
@@ -27,11 +42,11 @@
       <br />
       <div class="container mt-4">
         <h3 class="header">Found Users</h3>
-        <div v-if="users">
+        <div v-show="users">
           <table id="results_table" class="table" width="100%">
             <thead>
               <tr>
-                <th class="th-sm">Avatar</th>
+                <th class="th-sm" v-show="showAvatar == true">Avatar</th>
                 <th class="th-sm">Name</th>
                 <th class="th-sm">Bio</th>
                 <th class="th-sm">Followers</th>
@@ -42,10 +57,10 @@
             </thead>
             <tbody>
               <tr v-for="user in users" :key="user.id">
-                <td>
+                <td v-show="showAvatar == true">
                   <img
                     v-bind:src="user.avatar_url"
-                    alt=""
+                    alt="github user avatar"
                     class="user-avatar"
                   />
                 </td>
@@ -54,11 +69,14 @@
                 <td>{{ user.followers }}</td>
                 <td>{{ user.following }}</td>
                 <td>
-                  <a v-bind:href="user.twitter_username">{{
-                    user.twitter_username
-                  }}</a>
+                  <a
+                    v-bind:href="'https://twitter.com/' + user.twitter_username"
+                    >{{ user.twitter_username }}</a
+                  >
                 </td>
-                <td><a :href="user.html_url"></a>{{ user.html_url }}</td>
+                <td>
+                  <a v-bind:href="user.html_url">{{ user.html_url }}</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -73,6 +91,11 @@
 </template>
 
 <script>
+/*
+TODO: 
+Add a radio button and a checbox button that allows for the toggle of images
+- Toggling will show/hide the avatar<td> and the Avatar column<tr>
+*/
 import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-dt/js/dataTables.dataTables";
@@ -90,6 +113,17 @@ export default {
   setup() {
     const username = ref("");
     const users = ref(null);
+    const showAvatar = ref(false);
+    const checked = ref(false);
+
+    const handleToggle = () => {
+      checked.value == !checked.value;
+    };
+    const handleShowAvatar = () => {
+      console.log("checkbox clicked");
+      showAvatar.value = !showAvatar.value;
+      console.log(showAvatar.value);
+    };
 
     const handleSubmit = async () => {
       const gh_api = "https://api.github.com/search/users?q=";
@@ -97,9 +131,8 @@ export default {
       const gh_endpoint = gh_api + userInput;
       const newUserArray = [];
 
-      const axiosRequest = await axios
+      await axios
         .get(gh_endpoint)
-        // await fetch(gh_endpoint)
         .then((res) => {
           const fetchRequest = res.data;
 
@@ -114,41 +147,27 @@ export default {
                 return res.json();
               })
               .then((res) => {
-                // newUserArray.push(res);
-                console.log("newUserArray: ", newUserArray);
-
                 return res;
               });
 
             newUserArray.push(fetchRequest);
           }
-          console.log(users.value);
-          console.log(axiosRequest);
         });
       users.value = newUserArray;
-      $("#results_table").DataTable();
     };
 
-    return { handleSubmit, username, users };
-    // return { handleSubmit, users };
-  },
-  beforeMount() {
-    console.log("before mount");
+    return {
+      handleSubmit,
+      username,
+      users,
+      handleToggle,
+      checked,
+      handleShowAvatar,
+      showAvatar,
+    };
   },
   mounted() {
-    console.log("mounted!");
-  },
-  beforeUpdate() {
-    console.log("before update");
-  },
-  updated() {
-    console.log("updated!");
-  },
-  activated() {
-    console.log("activated");
-  },
-  beforeUnmount() {
-    console.log("before unmounted");
+    $("#results_table").DataTable();
   },
 };
 </script>
@@ -169,7 +188,8 @@ td {
   background-color: #061328 !important;
   color: #ffff;
 }
-tr {
+tr,
+p {
   color: turquoise;
 }
 .useravatar {
@@ -202,5 +222,12 @@ img {
 }
 .foundUsers {
   color: purple;
+}
+select {
+  background: white;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+#results_table_filter label input {
+  background-color: pink;
 }
 </style>
