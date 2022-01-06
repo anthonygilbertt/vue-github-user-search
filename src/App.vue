@@ -21,7 +21,7 @@
           v-model="checked"
           @click="handleToggle"
         />
-        <label for="radio"> click to enable check box</label>
+        <label for="radio"> click to enable Avatars</label>
         <hr />
         <input
           type="checkbox"
@@ -91,11 +91,6 @@
 </template>
 
 <script>
-/*
-TODO: 
-Add a radio button and a checbox button that allows for the toggle of images
-- Toggling will show/hide the avatar<td> and the Avatar column<tr>
-*/
 import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-dt/js/dataTables.dataTables";
