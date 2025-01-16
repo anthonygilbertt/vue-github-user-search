@@ -2,34 +2,18 @@
   <div class="row">
     <div class="col-md-12">
       <form v-on:keyup.enter="handleSubmit" id="userForm">
-        <h1 class="h3 mb-3 font-weight-normal">Search 4 A GitHub User</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Search for a GitHub User</h1>
         <input
           type="text"
           id="inputUser"
           class="form-control"
           name="username"
           v-model="username"
-          placeholder="User Name"
+          placeholder="Username"
           required
           autofocus
         />
         <br />
-        <p class="">Toggle the checkbox to show/hide the Avatars</p>
-        <input
-          type="radio"
-          id="radio"
-          v-model="checked"
-          @click="handleToggle"
-        />
-        <label for="radio"> click to enable Avatars</label>
-        <hr />
-        <input
-          type="checkbox"
-          id="checkbox"
-          :disabled="!checked"
-          @click="handleShowAvatar"
-        />
-        <label for="checkbox"> {{ checked }}</label>
         <button
           class="btn btn-lg btn-primary btn-block"
           type="button"
@@ -82,7 +66,7 @@
           </table>
         </div>
       </div>
-      <p class="mt-5 mb-3 text-muted">
+      <p class="mt-5 mb-3 text-black">
         Made with <img alt="Vue logo" src="./assets/logo.png" />ue.js by Anthony
         Gilbert
       </p>
@@ -108,8 +92,8 @@ export default {
   setup() {
     const username = ref("");
     const users = ref(null);
-    const showAvatar = ref(false);
-    const checked = ref(false);
+    const showAvatar = ref(true);
+    const checked = ref(true);
 
     const handleToggle = () => {
       checked.value == !checked.value;
@@ -180,7 +164,8 @@ img {
 body,
 html,
 td {
-  background-color: #061328 !important;
+  /* background-color: #061328 !important; */
+  background-color: #223e6b;
   color: #ffff;
 }
 tr,

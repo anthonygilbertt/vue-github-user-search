@@ -20,7 +20,7 @@ export default {
 body,
 html,
 td {
-  background-color: #061328 !important;
+  background-color: #223e6b !important;
   color: #ffff;
 }
 </style>
