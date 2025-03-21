@@ -14,8 +14,7 @@
         "datatables.net-dt": "^1.11.3",
         "jquery": "^3.6.0",
         "vue": "^3.2.0",
-        "vue-router": "^4.0.0-0",
-        "vue-tables-2": "^1.4.73"
+        "vue-router": "^4.5.0"
     },
     "devDependencies": {
         "@types/jquery": "^3.5.11",
