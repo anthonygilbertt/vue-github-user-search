@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "node build.cjs",
+        "build": "vite build",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -19,11 +19,8 @@
     },
     "devDependencies": {
         "@types/jquery": "^3.5.11",
-        "@vitejs/plugin-vue": "^4.5.0",
+        "@vitejs/plugin-vue": "^3.2.0",
         "@vue/compiler-sfc": "^3.2.47",
-        "vite": "^4.5.0"
-    },
-    "engines": {
-        "node": ">=16"
+        "vite": "^3.2.7"
     }
 }
