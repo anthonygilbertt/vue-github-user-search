@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "NODE_ENV=production node --experimental-modules ./node_modules/vite/bin/vite.js build",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -15,12 +15,15 @@
         "datatables.net-dt": "^1.11.3",
         "jquery": "^3.6.0",
         "vue": "^3.2.47",
-        "vue-router": "^4.5.0"
+        "vue-router": "^4.2.0"
     },
     "devDependencies": {
         "@types/jquery": "^3.5.11",
-        "@vitejs/plugin-vue": "^3.2.0",
+        "@vitejs/plugin-vue": "^4.0.0",
         "@vue/compiler-sfc": "^3.2.47",
-        "vite": "^3.2.7"
+        "vite": "^4.0.4"
+    },
+    "engines": {
+        "node": ">=16.0.0"
     }
 }
