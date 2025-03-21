@@ -30,7 +30,7 @@
           <table id="results_table" class="table" width="100%">
             <thead>
               <tr>
-                <th class="th-sm" v-show="showAvatar == true">Avatar</th>
+                <th class="th-sm">Avatar</th>
                 <th class="th-sm">Name</th>
                 <th class="th-sm">Bio</th>
                 <th class="th-sm">Followers</th>
@@ -41,7 +41,7 @@
             </thead>
             <tbody>
               <tr v-for="user in users" :key="user.id">
-                <td v-show="showAvatar == true">
+                <td>
                   <img
                     v-bind:src="user.avatar_url"
                     alt="github user avatar"
@@ -109,6 +109,8 @@ export default {
       const userInput = username.value;
       const gh_endpoint = gh_api + userInput;
       const newUserArray = [];
+      handleToggle();
+      handleShowAvatar();
 
       await axios
         .get(gh_endpoint)
