@@ -2,10 +2,10 @@
     "name": "vue-github-search",
     "version": "0.1.0",
     "private": true,
-    "type": "commonjs",
+    "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "node build.cjs",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -22,5 +22,8 @@
         "@vitejs/plugin-vue": "^4.5.0",
         "@vue/compiler-sfc": "^3.2.47",
         "vite": "^4.5.0"
+    },
+    "engines": {
+        "node": ">=16"
     }
 }
