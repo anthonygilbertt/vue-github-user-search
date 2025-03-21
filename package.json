@@ -2,10 +2,9 @@
     "name": "vue-github-search",
     "version": "0.1.0",
     "private": true,
-    "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "NODE_ENV=production node --experimental-modules ./node_modules/vite/bin/vite.js build",
+        "build": "vite build",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -19,11 +18,11 @@
     },
     "devDependencies": {
         "@types/jquery": "^3.5.11",
-        "@vitejs/plugin-vue": "^4.0.0",
+        "@vitejs/plugin-vue": "^2.3.4",
         "@vue/compiler-sfc": "^3.2.47",
-        "vite": "^4.0.4"
+        "vite": "^2.9.15"
     },
     "engines": {
-        "node": ">=16.0.0"
+        "node": "16.19.0"
     }
 }
