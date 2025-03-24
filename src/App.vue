@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-md-12">
+  <div class="row" style="margin: auto; width: 50%;">
+    <div class="col-md-12 items-center pl-5">
       <form v-on:keyup.enter="handleSubmit" id="userForm">
         <h1 class="h3 mb-3 font-weight-normal">Search for a GitHub User</h1>
         <input
@@ -28,7 +28,7 @@
         <h3 class="header">Found Users</h3>
         <div v-show="users">
           <table id="results_table" class="table" width="100%">
-            <thead>
+            <thead style="padding-top: 5%; margin-top: 5%;">
               <tr>
                 <th class="th-sm">Avatar</th>
                 <th class="th-sm">Name</th>
@@ -48,10 +48,10 @@
                     class="user-avatar"
                   />
                 </td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.bio }}</td>
-                <td>{{ user.followers }}</td>
-                <td>{{ user.following }}</td>
+                <td style="color: white">{{ user.name }}</td>
+                <td style="color: white">{{ user.bio }}</td>
+                <td style="color: white">{{ user.followers }}</td>
+                <td style="color: white">{{ user.following }}</td>
                 <td>
                   <a
                     v-bind:href="'https://twitter.com/' + user.twitter_username"
@@ -66,7 +66,7 @@
           </table>
         </div>
       </div>
-      <p class="mt-5 mb-3 text-black">
+      <p class="mt-5 mb-3 text-black" style="text-align: center">
         Made with <img alt="Vue logo" src="./assets/logo.png" />ue.js by Anthony
         Gilbert
       </p>
